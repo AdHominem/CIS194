@@ -44,7 +44,8 @@ matches x y = sum $ zipWith min (countColors x) (countColors y)
 
 -- Construct a Move from a guess given the actual code
 getMove :: Code -> Code -> Move
-getMove = undefined
+getMove secret guess = Move guess exMatches $ (matches secret guess) - exMatches
+ where exMatches = (exactMatches secret guess)
 
 -- Exercise 4 -----------------------------------------
 
