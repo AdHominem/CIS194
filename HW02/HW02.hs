@@ -61,8 +61,26 @@ filterCodes move codes = filter (\code -> isConsistent move code) codes
 
 -- Exercise 6 -----------------------------------------
 
-allCodes :: Int -> [Code]
-allCodes = undefined
+-- Extends a given Code by prepending a Peg: extendCode [Red, Green] Blue -> [Blue, Red, Green]
+extendCode :: Code -> Peg -> Code
+extendCode code peg = peg : code
+
+-- Extends a given Code by all possible Pegs, turning the Code into a list of Codes
+fullyExtendCode :: Code -> [Code]
+fullyExtendCode code = map (\color -> extendCode code color) colors
+
+-- Extends a given number of Codes by all possible Pegs
+fullyExtendCodes :: [Code] -> [Code]
+fullyExtendCodes [] = map (:[]) colors
+fullyExtendCodes codes = concatMap fullyExtendCode codes
+
+-- Helper function for allCodes which includes the Codes list from previous recursions
+aCodes :: [Code] -> Int -> [Code]
+aCodes codes 0 = codes
+aCodes codes l = aCodes (fullyExtendCodes codes) (l - 1)
+
+allCodes :: Int -> [[Peg]]
+allCodes l = aCodes [] l
 
 -- Exercise 7 -----------------------------------------
 
