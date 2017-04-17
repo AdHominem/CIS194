@@ -57,7 +57,7 @@ isConsistent (Move mCode mExMatches mMatches) code =
 -- Exercise 5 -----------------------------------------
 
 filterCodes :: Move -> [Code] -> [Code]
-filterCodes = undefined
+filterCodes move codes = filter (\code -> isConsistent move code) codes
 
 -- Exercise 6 -----------------------------------------
 
