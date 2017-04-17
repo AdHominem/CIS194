@@ -50,7 +50,9 @@ getMove secret guess = Move guess exMatches $ (matches secret guess) - exMatches
 -- Exercise 4 -----------------------------------------
 
 isConsistent :: Move -> Code -> Bool
-isConsistent = undefined
+isConsistent (Move mCode mExMatches mMatches) code =
+ exMatches == mExMatches && matches mCode code - exMatches == mMatches
+  where exMatches = (exactMatches mCode code)
 
 -- Exercise 5 -----------------------------------------
 
