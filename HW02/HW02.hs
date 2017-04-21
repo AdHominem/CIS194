@@ -62,25 +62,27 @@ filterCodes move codes = filter (\code -> isConsistent move code) codes
 -- Exercise 6 -----------------------------------------
 
 -- Extends a given Code by prepending a Peg: extendCode [Red, Green] Blue -> [Blue, Red, Green]
-extendCode :: Code -> Peg -> Code
+extendCode :: [a] -> a -> [a]
 extendCode code peg = peg : code
 
 -- Extends a given Code by all possible Pegs, turning the Code into a list of Codes
-fullyExtendCode :: Code -> [Code]
-fullyExtendCode code = map (\color -> extendCode code color) colors
+fullyExtendCode :: [a] -> [a] -> [[a]]
+fullyExtendCode colors code = map (extendCode code) colors
 
--- Extends a given number of Codes by all possible Pegs
-fullyExtendCodes :: [Code] -> [Code]
-fullyExtendCodes [] = map (:[]) colors
-fullyExtendCodes codes = concatMap fullyExtendCode codes
+-- Yields the product of a single list and a two dimensional list
+-- combine [1,2] [[3,4],[5,6]] = [[1,3,4],[2,3,4],[1,5,6],[2,5,6]]
+combine :: [a] -> [[a]] -> [[a]]
+combine choices [] = map (:[]) choices
+combine choices ys = concatMap (\y -> map (:y) choices) ys
 
--- Helper function for allCodes which includes the Codes list from previous recursions
-aCodes :: [Code] -> Int -> [Code]
-aCodes codes 0 = codes
-aCodes codes l = aCodes (fullyExtendCodes codes) (l - 1)
+-- Applies a given function n times to a given input
+nTimes :: Int -> (a -> a) -> a -> a
+nTimes n f x
+  | n <= 0   = x
+  |otherwise = nTimes (n - 1) f (f x)
 
-allCodes :: Int -> [[Peg]]
-allCodes l = aCodes [] l
+allCodes :: Int -> [Code]
+allCodes n = nTimes n (combine colors) []
 
 -- Exercise 7 -----------------------------------------
 
