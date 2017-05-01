@@ -42,7 +42,19 @@ empty = (\_ -> 0)
 -- Exercise 2 -----------------------------------------
 
 evalE :: State -> Expression -> Int
-evalE = undefined
+evalE _ (Val n) = n
+evalE state (Var s) = state s
+evalE state (Op ex1 op ex2) = case op of
+    Plus -> (evalE state ex1) + (evalE state ex2)
+    Minus -> (evalE state ex1) - (evalE state ex2)
+    Times -> (evalE state ex1) * (evalE state ex2)
+    Divide -> div (evalE state ex1) (evalE state ex2)
+    Gt -> if (evalE state ex1) > (evalE state ex2) then 1 else 0
+    Ge -> if (evalE state ex1) >= (evalE state ex2) then 1 else 0
+    Lt -> if (evalE state ex1) < (evalE state ex2) then 1 else 0
+    Le -> if (evalE state ex1) <= (evalE state ex2) then 1 else 0
+    Eql -> if (evalE state ex1) == (evalE state ex2) then 1 else 0
+
 
 -- Exercise 3 -----------------------------------------
 
