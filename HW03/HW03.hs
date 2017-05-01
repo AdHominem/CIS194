@@ -69,7 +69,9 @@ data DietStatement = DAssign String Expression
                      deriving (Show, Eq)
 
 desugar :: Statement -> DietStatement
-desugar = undefined
+desugar stmt = case stmt of
+    Incr s -> DAssign s (Op (Var s) Plus (Val 1))
+    For assign cond update stmt -> DWhile cond (desugar update)
 
 
 -- Exercise 4 -----------------------------------------
