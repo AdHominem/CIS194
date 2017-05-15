@@ -77,10 +77,19 @@ desugar stmt = case stmt of
 -- Exercise 4 -----------------------------------------
 
 evalSimple :: State -> DietStatement -> State
-evalSimple = undefined
+evalSimple state stmt = case stmt of
+    DAssign s expr -> extend state s (evalE state expr) -- ghci hangs for Var input?
+    DIf cond first second ->    if evalE state cond == 1
+                                then evalSimple state first
+                                else evalSimple state second
 
 run :: State -> Statement -> State
 run = undefined
+
+main = do state <- evalSimple empty (DAssign "a" (Val 10)) "a"
+          putStrLn "Assigned!"
+    --evalSimple state (DAssign "b" (Var "a")) "b"
+
 
 -- Programs -------------------------------------------
 

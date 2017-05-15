@@ -26,7 +26,7 @@ toRevDigits n = if n < 10
 doubleEveryOther :: [Integer] -> [Integer]
 doubleEveryOther [] = []
 doubleEveryOther [x] = [x]
-doubleEveryOther (f:s:xs) = f : 2 * s: doubleEveryOther xs
+doubleEveryOther (f:s:xs) = f : 2 * s : doubleEveryOther xs
 
 -- Exercise 4 -----------------------------------------
 
@@ -36,7 +36,6 @@ digitSum n = if n < 10
                         then 0
                         else n
                 else lastDigit n + digitSum (dropLastDigit n)
-
 
 -- Calculate the sum of all the digits in every Integer.
 sumDigits :: [Integer] -> Integer

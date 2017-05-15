@@ -8,7 +8,6 @@ data Expr = Lit    Bool
           | App    Expr Expr
             deriving (Eq)
 
-
 instance Show Expr where
     show (Lit b) = show b
     show (Var v) = v
