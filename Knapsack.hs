@@ -7,35 +7,51 @@ import Data.Ord
 
 {-
     This module implements a Knapsack Problem solver using an approximate
-    solution which is more effective on large input sizes
+    solution which is more effective on large input sizes, using the
+    profitability index (value / weight)
 -}
 
 -- | Each item consists of an integer value and weight
 data Item = Item {
-      value        :: Int
-    , weight       :: Int
+      attribute :: String
+    , name      :: String
+    , value     :: Int
+    , weight    :: Int
     } deriving (Eq)
 
+-- | Items are sorted by profitability index by default
 instance Ord Item where
     compare = flip (comparing getIndex)
 
 instance Show Item where
-   show (Item value weight) = "Item of " ++ show value ++ "€ weighting " ++ show weight ++ "kg."
+   show item = attribute item ++ " " ++ name item ++ " worth " ++ show (value item) ++ "€, weighting " ++ show (weight item) ++ "kg."
 
+-- | The profitability index is the quotient of value and weight
 getIndex :: Item -> Double
 getIndex item = fromIntegral (value item) / fromIntegral (weight item)
 
+attributes = ["Red", "Blue", "Green", "Yellow", "Orange", "Violet", "Purple", "Black", "White", "Magic", "Heavy",
+    "Wizardly", "Occult", "Magical", "Functional", "Pure", "Enchanted", "Glowing", "Nuclear", "Atomic", "Holy"]
+things = ["Shirt", "Socks", "Pants", "Skirt", "Trousers", "Umbrella", "Blanket", "Toothbrush", "First Aid Kit",
+    "Camera", "Dog", "Cat", "Laptop", "Opium Pipe", "Lizard", "Copy of SICP", "Towel", "Whiskey", "Compiler",
+    "Keyboard", "Two-handed Hammer", "Fuel Cell", "Hand Grenade", "Cannabis", "Mage Cloak", "Cigar",
+    "Bottle of Alcohol"]
+
 {-|
     Generates a list of random Items in a given range
-    The generator is changed with each iteration and the newly seeded one is passed to the next
+    Note that randomR returns a tuple containing both the generated value as well as the new generator,
+    thus to access the elements separately fst and snd is used. Inside the where block, the generator is
+    passed from one call to another and eventually used in the recursive call of generateItems
 -}
 generateItems :: (RandomGen g) => g -> Int -> (Int, Int) -> [Item]
-generateItems generator n range
-    | n == 0 = []
-    | otherwise = (Item (fst value) (fst weight)) : generateItems (snd weight) (n - 1) range
+generateItems generator n range = if n == 0
+    then []
+    else (Item (attributes !! fst colorNum) (things !! fst thingNum) (fst value) (fst weight)) : generateItems (snd thingNum) (n - 1) range
     where
         value = randomR range generator
         weight = randomR range (snd value)
+        colorNum = randomR (1, length attributes - 1) (snd weight)
+        thingNum = randomR (1, length things - 1) (snd colorNum)
 
 -- | Reads a line from stdout and ensures it is a positive integer
 getLineInt :: IO Int
@@ -86,7 +102,10 @@ main = do
     putStrLn $ "\nGenerating " ++ show itemCount ++ " items:"
     gen <- getStdGen
     let items = sort (generateItems gen itemCount (minNum, maxNum))
-    mapM_ print items
+
+    if itemCount >= 100000
+    then putStrLn "Not listing the items because it's just too much! ;-)"
+    else mapM_ print items
 
     putStrLn "\nPlease enter the maximum weight: "
     weightLimit <- getLineInt
@@ -94,7 +113,11 @@ main = do
     putStrLn $ "\nThe limit is set to " ++ show weightLimit ++ "kg."
 
     let knapsack = [] :: [Item]
-    putStrLn "\nThis is the sack: "
+    putStrLn "\nFilling the sack... this might take some time:"
     let filledSack = fillKnapsack items knapsack weightLimit
-    mapM_ print filledSack
+
+    if length filledSack >= 100000
+    then putStrLn "Not listing the collected items because it's just too much! ;-)"
+    else mapM_ print filledSack
+
     putStrLn $ generateSuccessMessage filledSack weightLimit
