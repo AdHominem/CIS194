@@ -83,7 +83,7 @@ main = do
     putStrLn "Please enter the maximum number for weights and values: "
     maxNum <- getLineInt
 
-    putStrLn $ "\nGenerating " ++ (show itemCount) ++ " items:"
+    putStrLn $ "\nGenerating " ++ show itemCount ++ " items:"
     gen <- getStdGen
     let items = sort (generateItems gen itemCount (minNum, maxNum))
     mapM_ print items
@@ -91,7 +91,7 @@ main = do
     putStrLn "\nPlease enter the maximum weight: "
     weightLimit <- getLineInt
 
-    putStrLn $ "\nThe limit is set to " ++ (show weightLimit) ++ "kg."
+    putStrLn $ "\nThe limit is set to " ++ show weightLimit ++ "kg."
 
     let knapsack = [] :: [Item]
     putStrLn "\nThis is the sack: "
