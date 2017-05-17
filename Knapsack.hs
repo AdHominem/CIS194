@@ -39,17 +39,6 @@ getIndex :: Item -> Double
 getIndex (Item _ _ value weight) = fromIntegral value / fromIntegral weight
 
 
-attributes = ["Red", "Blue", "Green", "Yellow", "Orange", "Violet", "Purple", "Black", "White", "Magic", "Heavy",
-    "Wizardly", "Occult", "Magical", "Functional", "Pure", "Enchanted", "Glowing", "Nuclear", "Atomic", "Holy",
-    "Space", "Underwater", "Golden", "Shiny", "Artificial", "Enhanched", "Autistic"]
-
-things = ["Shirt", "Socks", "Pants", "Skirt", "Trousers", "Umbrella", "Blanket", "Toothbrush", "First Aid Kit",
-    "Camera", "Dog", "Cat", "Laptop", "Opium Pipe", "Lizard", "Copy of SICP", "Towel", "Whiskey", "Compiler",
-    "Keyboard", "Two-handed Hammer", "Fuel Cell", "Hand Grenade", "Cannabis", "Mage Cloak", "Cigar",
-    "Bottle of Alcohol", "Bottle of Mystery Juice", "Bottle of Goat Milk", "Fernando's Fragrance", "Opium Cigar",
-    "Ice Cream", "Episode of Sweet Boy Beach", "Manatee", "Walrus", "Baby Goat", "Vertical Seafood Taco"]
-
-
 {-|
     Generates a list of random Items in a given range.
     Note that randomR returns a tuple containing both the generated value as well as the new generator which is
@@ -144,3 +133,14 @@ main = do
     threadDelay 1000000
 
     putStrLn $ generateSuccessMessage filledSack weightLimit
+
+
+attributes = ["Red", "Blue", "Green", "Yellow", "Orange", "Violet", "Purple", "Black", "White", "Magic", "Heavy",
+    "Wizardly", "Occult", "Magical", "Functional", "Pure", "Enchanted", "Glowing", "Nuclear", "Atomic", "Holy",
+    "Space", "Underwater", "Golden", "Shiny", "Artificial", "Enhanched", "Autistic"]
+
+things = ["Shirt", "Socks", "Pants", "Skirt", "Trousers", "Umbrella", "Blanket", "Toothbrush", "First Aid Kit",
+    "Camera", "Dog", "Cat", "Laptop", "Opium Pipe", "Lizard", "Copy of SICP", "Towel", "Whiskey", "Compiler",
+    "Keyboard", "Two-handed Hammer", "Fuel Cell", "Hand Grenade", "Cannabis", "Mage Cloak", "Cigar",
+    "Bottle of Alcohol", "Bottle of Mystery Juice", "Bottle of Goat Milk", "Fernando's Fragrance", "Opium Cigar",
+    "Ice Cream", "Episode of Sweet Boy Beach", "Manatee", "Walrus", "Baby Goat", "Vertical Seafood Taco"]

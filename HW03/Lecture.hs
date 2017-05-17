@@ -130,4 +130,4 @@ height Empty                = 0
 height (Node _ Empty Empty) = 0
 height (Node _ ltree rtree) = 1 + max (height ltree) (height rtree)
 
-
+'
