@@ -22,8 +22,6 @@ data User = User {
     email       :: String
     } deriving (Show)
 
-data UserList = UserList [User]
-
 data Entry = Entry {
     name          :: String,
     version       :: String,
@@ -55,8 +53,7 @@ instance FromJSON Entry where
 instance ToJSON User where
  toJSON (User name email) =
     object [ "name"  .= name
-           , "email" .= email
-             ]
+           , "email" .= email ]
 
 instance ToJSON Entry where
  toJSON (Entry name version mainFile license npmVersion nodeVersion npmUser) =
@@ -73,4 +70,6 @@ main = do
  d <- (eitherDecode <$> getJSON) :: IO (Either String [Entry])
  case d of
   Left err -> putStrLn err
-  Right ps -> writeFile "result.json" (pack (encode ps))
+  Right ps -> print ps
+
+-- ToDo Dependencies and Maintainers
