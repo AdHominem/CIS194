@@ -1,5 +1,4 @@
-{-# LANGUAGE OverloadedStrings #-}
-{-# LANGUAGE RecordWildCards #-}
+{-# LANGUAGE OverloadedStrings, RecordWildCards #-}
 
 module JSONParser where
 
@@ -70,6 +69,6 @@ main = do
  d <- (eitherDecode <$> getJSON) :: IO (Either String [Entry])
  case d of
   Left err -> putStrLn err
-  Right ps -> print ps
+  Right ps -> B.writeFile "result.json" (encode ps)
 
 -- ToDo Dependencies and Maintainers
