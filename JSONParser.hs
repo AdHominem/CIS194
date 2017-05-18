@@ -4,6 +4,7 @@ module JSONParser where
 
 import Data.Aeson
 import Data.Aeson.Types
+import Data.Aeson.Encode.Pretty
 import Data.Text
 import Control.Applicative
 import Control.Monad
@@ -69,6 +70,6 @@ main = do
  d <- (eitherDecode <$> getJSON) :: IO (Either String [Entry])
  case d of
   Left err -> putStrLn err
-  Right ps -> B.writeFile "result.json" (encode ps)
+  Right ps -> B.writeFile "result.json" (encodePretty ps)
 
 -- ToDo Dependencies and Maintainers
