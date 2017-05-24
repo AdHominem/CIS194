@@ -1,9 +1,10 @@
-{-# LANGUAGE OverloadedStrings, RecordWildCards #-}
+{-# LANGUAGE OverloadedStrings, RecordWildCards, LambdaCase #-}
 
 module JSONParser where
 
 import Data.Aeson
 import Data.Aeson.Types
+import qualified Data.HashMap.Strict as HM
 import Data.Aeson.Encode.Pretty
 import Data.Text
 import Data.Foldable
@@ -22,7 +23,7 @@ getJSON = B.readFile jsonFile
 data User = User {
     userName    :: String,
     email       :: String
-    } deriving (Show)
+} deriving (Show)
 
 data Entry = Entry {
     name          :: String,
@@ -30,11 +31,18 @@ data Entry = Entry {
     version       :: String,
     mainFile      :: Maybe String,
     --author        :: User,
-    --license       :: Maybe String,
+    maintainers   :: Maybe [User],
+    license       :: Maybe String,
+    licenses      :: Maybe [License],
     npmVersion    :: Maybe String,
     nodeVersion   :: Maybe String,
     npmUser       :: Maybe User
-    } deriving (Show)
+} deriving (Show)
+
+data License = License {
+    licenseType :: String,
+    url         :: String
+} deriving (Show)
 
 instance FromJSON User where
   parseJSON = withObject "user" $ \o -> do
@@ -50,11 +58,19 @@ instance FromJSON Entry where
     version         <- value .: "version"
     mainFile        <- value .:? "main"
     --author          <- value .: "author"
-    --license         <- value .:? "license"
+    maintainers     <- value .:? "maintainers"
+    license         <- value .:? "license"
+    licenses        <- value .:? "licenses"
     npmVersion      <- value .:? "_npmVersion"
     nodeVersion     <- value .:? "_nodeVersion"
     npmUser         <- value .:? "_npmUser"
     return Entry{..}
+
+instance FromJSON License where
+  parseJSON = withObject "license" $ \o -> do
+    licenseType <- o .: "type"
+    url         <- o .: "url"
+    return License{..}
 
 instance ToJSON User where
  toJSON (User name email) =
@@ -62,16 +78,27 @@ instance ToJSON User where
            , "email" .= email ]
 
 instance ToJSON Entry where
- toJSON (Entry name description version mainFile npmVersion nodeVersion npmUser) =
+ toJSON (Entry name description version mainFile maintainers license licenses npmVersion nodeVersion npmUser) =
     object [ "name"         .= name
            , "description"  .= description
            , "version"      .= version
            , "mainFile"     .= mainFile
            --, "author"       .= author
-           --, "license"      .= license
+           , "maintainers"  .= maintainers
+           , "license"      .= license
+           , "licenses"     .= licenses
            , "npmVersion"   .= npmVersion
            , "nodeVersion"  .= nodeVersion
            , "npmUser"      .= npmUser ]
+
+instance ToJSON License where
+ toJSON (License licenseType url) =
+    object [ "type" .= licenseType
+           , "url"  .= url ]
+
+parse' p = do
+    result <- decode p :: Maybe Value
+    return result
 
 main :: IO ()
 main = do
@@ -80,4 +107,4 @@ main = do
   Left err -> putStrLn err
   Right ps -> B.writeFile "result.json" (encodePretty ps)
 
--- ToDo Licenses, Author, Dependencies and Maintainers
+-- ToDo Author, Dependencies
