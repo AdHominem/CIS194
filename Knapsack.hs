@@ -95,7 +95,7 @@ generateSuccessMessage sack limit
 
 main :: IO ()
 main = do
-    putStrLn "Welcome to the Knapsack Problem solver!"
+    putStrLn ".:! Welcome to the Knapsack Problem solver !:."
     threadDelay 1000000
 
     putStrLn "Please enter the amount of items to generate: "
@@ -112,7 +112,7 @@ main = do
     let items = sort (generateItems gen itemCount (minNum, maxNum))
 
     mapM_ print (take 100 items)
-    if itemCount >= 100
+    if itemCount > 100
     then putStrLn $ "Magical things would have happened to your terminal if I printed " ++ show itemCount
         ++ " items, so I rather showed you the first 100."
     else putStrLn "These are your items!"
@@ -126,7 +126,7 @@ main = do
     let filledSack = fillKnapsack items knapsack weightLimit
 
     mapM_ print (take 100 filledSack)
-    if length filledSack >= 100
+    if length filledSack > 100
     then putStrLn $ "Your terminal would have entered a world of wonders if I printed " ++ show (length filledSack)
         ++ " items, so I rather showed you the first 100."
     else putStrLn "These are your items collected!"
@@ -137,10 +137,12 @@ main = do
 
 attributes = ["Red", "Blue", "Green", "Yellow", "Orange", "Violet", "Purple", "Black", "White", "Magic", "Heavy",
     "Wizardly", "Occult", "Magical", "Functional", "Pure", "Enchanted", "Glowing", "Nuclear", "Atomic", "Holy",
-    "Space", "Underwater", "Golden", "Shiny", "Artificial", "Enhanched", "Autistic"]
+    "Space", "Underwater", "Golden", "Shiny", "Artificial", "Enhanched", "Autistic", "Wonderful", "Sparkling",
+    "Shimmering"]
 
 things = ["Shirt", "Socks", "Pants", "Skirt", "Trousers", "Umbrella", "Blanket", "Toothbrush", "First Aid Kit",
     "Camera", "Dog", "Cat", "Laptop", "Opium Pipe", "Lizard", "Copy of SICP", "Towel", "Whiskey", "Compiler",
     "Keyboard", "Two-handed Hammer", "Fuel Cell", "Hand Grenade", "Cannabis", "Mage Cloak", "Cigar",
     "Bottle of Alcohol", "Bottle of Mystery Juice", "Bottle of Goat Milk", "Fernando's Fragrance", "Opium Cigar",
-    "Ice Cream", "Episode of Sweet Boy Beach", "Manatee", "Walrus", "Baby Goat", "Vertical Seafood Taco"]
+    "Ice Cream", "Episode of Sweet Boy Beach", "Manatee", "Walrus", "Baby Goat", "Vertical Seafood Taco",
+    "Gauss Rifle"]
