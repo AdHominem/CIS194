@@ -20,7 +20,7 @@ data Item = Item {
     , name      :: String
     , value     :: Int
     , weight    :: Int
-    } deriving (Eq)
+    } deriving Eq
 
 
 -- | They can be displayed...

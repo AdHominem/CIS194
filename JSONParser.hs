@@ -15,39 +15,40 @@ import GHC.Generics
 import Text.Read (readMaybe)
 
 jsonFile :: FilePath
-jsonFile = "data.json"
+jsonFile = "dependencies.json"
 
 getJSON :: IO B.ByteString
 getJSON = B.readFile jsonFile
 
 data User = User {
-    userName    :: String,
-    email       :: String
-} deriving (Show)
+    userName    :: Maybe String,
+    email       :: Maybe String
+} deriving Show
 
 data Entry = Entry {
     name          :: String,
     description   :: Maybe String,
     version       :: String,
-    mainFile      :: Maybe String,
-    --author        :: User,
+    dependencies  :: Maybe Value,
+    mainFile      :: Maybe Value,
+    author        :: Maybe Value,
     maintainers   :: Maybe [User],
-    license       :: Maybe String,
-    licenses      :: Maybe [License],
-    npmVersion    :: Maybe String,
+    license       :: Maybe Value,
+    licenses      :: Maybe Value,
+    npmVersion    :: Maybe Value,
     nodeVersion   :: Maybe String,
     npmUser       :: Maybe User
-} deriving (Show)
+} deriving Show
 
 data License = License {
     licenseType :: String,
     url         :: String
-} deriving (Show)
+} deriving Show
 
 instance FromJSON User where
   parseJSON = withObject "user" $ \o -> do
-    userName     <- o .: "name"
-    email        <- o .: "email"
+    userName     <- o .:? "name"
+    email        <- o .:? "email"
     return User{..}
 
 instance FromJSON Entry where
@@ -56,8 +57,9 @@ instance FromJSON Entry where
     name            <- value .: "name"
     description     <- value .:? "description"
     version         <- value .: "version"
+    dependencies    <- value .:? "dependencies"
     mainFile        <- value .:? "main"
-    --author          <- value .: "author"
+    author          <- value .:? "author"
     maintainers     <- value .:? "maintainers"
     license         <- value .:? "license"
     licenses        <- value .:? "licenses"
@@ -78,12 +80,13 @@ instance ToJSON User where
            , "email" .= email ]
 
 instance ToJSON Entry where
- toJSON (Entry name description version mainFile maintainers license licenses npmVersion nodeVersion npmUser) =
+ toJSON (Entry name description version dependencies mainFile author maintainers license licenses npmVersion nodeVersion npmUser) =
     object [ "name"         .= name
            , "description"  .= description
            , "version"      .= version
+           , "dependencies" .= dependencies
            , "mainFile"     .= mainFile
-           --, "author"       .= author
+           , "author"       .= author
            , "maintainers"  .= maintainers
            , "license"      .= license
            , "licenses"     .= licenses
@@ -96,15 +99,16 @@ instance ToJSON License where
     object [ "type" .= licenseType
            , "url"  .= url ]
 
-parse' p = do
-    result <- decode p :: Maybe Value
-    return result
+printE :: [Entry] -> IO()
+printE [x]    = B.appendFile "result.json" (encodePretty x)
+printE (x:xs) = B.appendFile "result.json" (encodePretty x) >> printE xs
+
+printAsJSON :: [Entry] -> IO()
+printAsJSON entries = B.writeFile "result.json" (encodePretty entries)
 
 main :: IO ()
 main = do
  d <- (eitherDecode <$> getJSON) :: IO (Either String [Entry])
  case d of
   Left err -> putStrLn err
-  Right ps -> B.writeFile "result.json" (encodePretty ps)
-
--- ToDo Author, Dependencies
+  Right ps -> printAsJSON ps
